@@ -38,3 +38,10 @@ jobs:
       # Step 4: Run our Python script!
       - name: Run the automation script
         run: python wiki_bot.py
+
+            # --- ADD THIS NEW STEP BELOW ---
+      - name: Package the results for download
+        uses: actions/upload-artifact@v4
+        with:
+          name: wiki-results
+          path: wiki_output.txt
