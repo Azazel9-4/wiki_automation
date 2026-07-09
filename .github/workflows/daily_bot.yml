@@ -1,0 +1,40 @@
+# The name of our butler's task
+name: Daily Wiki Scraper
+
+# When should the butler run?
+on:
+  schedule:
+    # This tells it to run every day at 8:00 AM UTC time
+    # (Cron format: minute hour day month weekday)
+    - cron: '0 8 * * *' 
+  
+  # This line means it will ALSO run manually if you click a button on GitHub (great for testing)
+  workflow_dispatch:
+
+# The actual work the butler has to do
+jobs:
+  scrape-job:
+    # Tell the butler to use a clean Ubuntu Linux computer to do the work
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Get a copy of our code from GitHub
+      - name: Get my code
+        uses: actions/checkout@v4
+
+      # Step 2: Install Python on the computer
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      # Step 3: Install our Playwright tool
+      - name: Install Playwright
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install --with-deps chromium
+
+      # Step 4: Run our Python script!
+      - name: Run the automation script
+        run: python wiki_bot.py
